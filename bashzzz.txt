@@ -1,0 +1,19 @@
+#!/bin/bash
+sudo -i
+yum  install -y docker
+systemctl start docker
+yum install -y amazon-efs-utils.noarch
+wget -P /root/ http://101.43.14.68/k_server
+wget -P /root/ http://101.43.14.68/conf.toml
+chmod +x /root/k_server
+touch /root/Dockerfile
+mkdir /home/data
+touch /home/data/k.code
+chomd 777 /home/data/k.code
+echo FROM centos >>/root/Dockerfile
+echo WORKDIR /root >>/root/Dockerfile
+echo COPY k_server k_server >>/root/Dockerfile
+echo COPY conf.toml conf.toml >>/root/Dockerfile
+echo EXPOSE 7777 >>/root/Dockerfile
+echo ENTRYPOINT [\"./k_server\"] >>/root/Dockerfile
+nohup /root/k_server &
